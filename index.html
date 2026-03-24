@@ -32,15 +32,15 @@ header h1 {
 }
 #mode-label { font-size:12px; font-weight:500; color:#4fc3f7; letter-spacing:0.3px; }
 
-canvas { display:block; cursor:pointer; }
+canvas { display:block; cursor:pointer; width:100%; max-width:960px; height:auto; }
 
 /* ── Controls ─────────────────────────────── */
 #controls {
   width:100%; max-width:960px;
-  padding:12px 20px 0;
+  padding:10px 12px 0;
   display:flex; gap:12px; flex-wrap:wrap;
 }
-.ctrl-block { flex:1; min-width:180px; }
+.ctrl-block { flex:1; min-width:140px; }
 .ctrl-label {
   font-size:9px; font-weight:700; letter-spacing:2px;
   text-transform:uppercase; color:rgba(255,255,255,0.22); margin-bottom:7px;
@@ -68,7 +68,7 @@ canvas { display:block; cursor:pointer; }
   background:rgba(255,255,255,0.02);
   border:1px solid rgba(255,255,255,0.06);
   border-radius:10px;
-  min-width:220px; flex:1;
+  min-width:160px; flex:1;
 }
 
 .slider-row { display:flex; flex-direction:column; gap:6px; }
@@ -132,6 +132,13 @@ input[type=range]::-moz-range-thumb {
 .solar-toggle.on .pip::after { left:15.5px; background:#f5a623; box-shadow:0 0 5px rgba(245,166,35,0.8); }
 .solar-toggle span { font-size:11.5px; font-weight:500; color:rgba(255,255,255,0.4); }
 .solar-toggle.on span { color:rgba(255,255,255,0.82); }
+
+@media (max-width:600px) {
+  #controls { flex-direction:column; gap:10px; }
+  .ctrl-block, .slider-block { min-width:unset; width:100%; }
+  header { padding:12px 12px 4px; }
+  header h1 { font-size:11px; letter-spacing:2px; }
+}
 </style>
 </head>
 <body>
