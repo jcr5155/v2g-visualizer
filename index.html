@@ -589,7 +589,7 @@ function drawMeterNode(flows){
 
   // Label
   ctx.fillStyle=rgba(col,active?0.72:0.24); ctx.font='600 10px Inter,sans-serif';
-  ctx.fillText('Utility METER', n.x, n.y+n.r+30);
+  ctx.fillText('UTILITY METER', n.x, n.y+n.r+30);
 
   // Importing / Exporting / Idle
   const sub=pw>0.05?'Importing':pw<-0.05?'Exporting':'Idle';
