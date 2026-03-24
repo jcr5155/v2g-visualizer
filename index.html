@@ -129,16 +129,16 @@ canvas {
         <span class="mode-sub">Grid + Solar → EV at 7.2 kW L2</span>
       </button>
       <button class="mode-btn" data-mode="1">
-        <span class="num">②</span> V2G – Savings Mode
-        <span class="mode-sub">EV covers load, avoids peak TOU</span>
+        <span class="num">②</span> V2G – Bill Savings
+        <span class="mode-sub">EV covers load, TOU or Self Consumption</span>
       </button>
       <button class="mode-btn" data-mode="2">
-        <span class="num">③</span> V2G VPP – Net Zero
-        <span class="mode-sub">EV dynamically tracks net-zero grid</span>
+        <span class="num">③</span> V2G VPP – Variable Output
+        <span class="mode-sub">EV discharges variable amount of power to avoid import/export</span>
       </button>
       <button class="mode-btn" data-mode="3">
         <span class="num">④</span> V2G VPP – Fixed Output
-        <span class="mode-sub">EV at 11.5 kW, surplus exports to grid</span>
+        <span class="mode-sub">EV at fixed output, export allowed</span>
       </button>
     </div>
   </div>
@@ -159,7 +159,7 @@ const W = 960, H = 580;
 
 // ── Constants ─────────────────────────────
 const SOLAR_KW  = 4.0;
-const CHARGE_KW = 7.2;
+const CHARGE_KW = 11.5;
 const MAX_DISCH = 11.5;
 const MAX_VIZ   = 16;
 
@@ -605,7 +605,7 @@ function frame() {
   ['solar','grid','ev','home'].forEach(id=>drawNode(id,pw[id],f));
 
   // ── Update header status ──
-  const ml=['EV Charging','V2G \u2013 Savings Mode','V2G VPP \u2013 Net Zero','V2G VPP \u2013 Fixed Output'];
+  const ml=['EV Charging','V2G \u2013 Savings Mode','V2G VPP \u2013 VPP Variable Output','V2G VPP \u2013 VPP Fixed Output'];
   const mc=['#4fc3f7','#f5a623','#4cd964','#c084fc'];
   const st=document.getElementById('mode-label');
   st.textContent=ml[S.mode]; st.style.color=mc[S.mode];
