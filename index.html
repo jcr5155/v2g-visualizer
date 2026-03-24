@@ -166,11 +166,11 @@ input[type=range]::-moz-range-thumb {
       </button>
       <button class="mode-btn" data-mode="2">
         <span class="num">③</span> V2G VPP – Variable Output
-        <span class="mode-sub">Utility dispatch signal for EV to discharge variable amount to avoid import/export</span>
+        <span class="mode-sub">EV discharges variable amount to avoid import/export</span>
       </button>
       <button class="mode-btn" data-mode="3">
         <span class="num">④</span> V2G VPP – Fixed Output
-        <span class="mode-sub">Utility dispatch signal for EV to ouput fixed amount, export allowed</span>
+        <span class="mode-sub">EV at fixed output, export allowed</span>
       </button>
     </div>
   </div>
@@ -238,8 +238,8 @@ const S = {
 
 const NODES = {
   solar: { x:570,  y:68,  r:52, color:'#f5a623', label:'Solar' },
-  grid:  { x:78,   y:295, r:52, color:'#9b9b9b', label:'Electric Grid'  },
-  meter: { x:320,  y:295, r:36, color:'#94a3b8', label:'Utility Meter' },
+  grid:  { x:78,   y:295, r:52, color:'#9b9b9b', label:'Grid'  },
+  meter: { x:320,  y:295, r:36, color:'#94a3b8', label:'Meter' },
   home:  { x:640,  y:295, r:52, color:'#4fc3f7', label:'Home'  },
   ev:    { x:640,  y:460, r:52, color:'#4cd964', label:'EV'    },
 };
@@ -270,7 +270,7 @@ function calcFlows() {
         pGrid = net <= 0 ? net : net - pEV; }
       break;
     case 2: // V2G VPP Variable — EV tracks net-zero, capped at slider rate
-      { const sig = Math.sin(S.tick/48)*0.6, net = load - sol;
+      { const sig = Math.sin(S.tick/120)*0.2, net = load - sol;
         if(net <= 0){ pEV=0; pGrid=net+sig*0.3; }
         else{ pEV=Math.min(rate,Math.max(0,net+sig)); pGrid=net-pEV; } }
       break;
@@ -589,7 +589,7 @@ function drawMeterNode(flows){
 
   // Label
   ctx.fillStyle=rgba(col,active?0.72:0.24); ctx.font='600 10px Inter,sans-serif';
-  ctx.fillText('UTILITY METER', n.x, n.y+n.r+30);
+  ctx.fillText('METER', n.x, n.y+n.r+30);
 
   // Importing / Exporting / Idle
   const sub=pw>0.05?'Importing':pw<-0.05?'Exporting':'Idle';
