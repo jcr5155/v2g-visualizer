@@ -231,13 +231,17 @@ const S = {
 };
 
 // ── Layout ────────────────────────────────
-const JX = 420, JY = 295;
+// Topology: Grid → Meter → Home ← Solar (direct)
+//                           ↕
+//                           EV
+//                        Loads →
 
 const NODES = {
-  solar: { x:420, y:68,  r:52, color:'#f5a623', label:'Solar' },
-  grid:  { x:78,  y:295, r:52, color:'#9b9b9b', label:'Grid'  },
-  home:  { x:640, y:295, r:52, color:'#4fc3f7', label:'Home'  },
-  ev:    { x:420, y:520, r:52, color:'#4cd964', label:'EV'    },
+  solar: { x:570,  y:68,  r:52, color:'#f5a623', label:'Solar' },
+  grid:  { x:78,   y:295, r:52, color:'#9b9b9b', label:'Grid'  },
+  meter: { x:320,  y:295, r:36, color:'#94a3b8', label:'Meter' },
+  home:  { x:640,  y:295, r:52, color:'#4fc3f7', label:'Home'  },
+  ev:    { x:640,  y:460, r:52, color:'#4cd964', label:'EV'    },
 };
 
 const LOAD_NODES = {
@@ -279,7 +283,7 @@ function calcFlows() {
 }
 
 // ── Particles ─────────────────────────────
-const parts = {solar:[],grid:[],ev:[],home:[],hvac:[],stove:[],dryer:[],hwh:[]};
+const parts = {solar:[],grid:[],meter:[],ev:[],home:[],hvac:[],stove:[],dryer:[],hwh:[]};
 
 function rgba(hex,a){
   const r=parseInt(hex.slice(1,3),16),g=parseInt(hex.slice(3,5),16),b=parseInt(hex.slice(5,7),16);
@@ -296,13 +300,15 @@ function spawnPart(pool,pw,toCenter){
 }
 
 function tickParts(flows){
-  const main={solar:flows.pSolar,grid:flows.pGrid,ev:flows.pEV,home:flows.pHome};
+  // solar, grid, ev: main spokes. meter is a pass-through carrying pGrid.
+  const main={solar:flows.pSolar,grid:flows.pGrid,meter:flows.pGrid,ev:flows.pEV};
   Object.keys(main).forEach(id=>{
     const pw=main[id],abs=Math.abs(pw);
     if(abs<0.05){parts[id]=[];return;}
     spawnPart(parts[id],pw,pw>0);
     parts[id]=parts[id].filter(p=>{p.t+=p.dir*p.spd;return p.t>=0&&p.t<=1;});
   });
+  parts.home=[];
   Object.keys(LOAD_NODES).forEach(id=>{
     const pw=S.loads[id]?S.loadKW[id]:0;
     if(pw<0.05){parts[id]=[];return;}
@@ -371,11 +377,10 @@ function drawNode(id,pw,flows){
   if(id==='ev') drawTruckIcon(n.x,n.y,n.r*0.80,iconCol,active);
   else drawNodeIcon(id,n.x,n.y,n.r*0.38,iconCol);
 
-  // Labels — EV draws above to avoid canvas clip, others below
+  // Labels below node for all nodes
   const dispKW = id==='home' ? flows.load : abs;
-  const above  = id==='ev';
-  const baseY  = above ? n.y - n.r - 8 : n.y + n.r + 22;
-  const step   = above ? -14 : 14;
+  const baseY  = n.y + n.r + 22;
+  const step   = 14;
 
   ctx.textAlign='center'; ctx.textBaseline='alphabetic';
 
@@ -528,14 +533,68 @@ function drawLoadNode(id,flows){
   }
 }
 
-function drawJunction(flows){
-  const tot=Math.abs(flows.pSolar)+Math.abs(flows.pGrid)+Math.abs(flows.pEV);
-  if(tot<0.1) return;
-  const p=0.5+0.5*Math.sin(S.tick/26);
-  ctx.beginPath();ctx.arc(JX,JY,5+p*2,0,Math.PI*2);
-  ctx.fillStyle=`rgba(255,255,255,${0.07+p*0.05})`;ctx.fill();
-  ctx.beginPath();ctx.arc(JX,JY,2.8,0,Math.PI*2);
-  ctx.fillStyle='rgba(255,255,255,0.55)';ctx.fill();
+function drawMeterNode(flows){
+  const n = NODES.meter;
+  const pw = flows.pGrid;
+  const abs = Math.abs(pw);
+  const active = abs > 0.05;
+  const col = n.color;
+
+  // Glow
+  if(active){
+    const mg=ctx.createRadialGradient(n.x,n.y,n.r*0.3,n.x,n.y,n.r*2.2);
+    mg.addColorStop(0,rgba(col,0.12)); mg.addColorStop(1,rgba(col,0));
+    ctx.beginPath();ctx.arc(n.x,n.y,n.r*2.2,0,Math.PI*2);ctx.fillStyle=mg;ctx.fill();
+  }
+
+  // Body
+  ctx.beginPath();ctx.arc(n.x,n.y,n.r,0,Math.PI*2);
+  ctx.fillStyle=active?rgba(col,0.08):'rgba(255,255,255,0.02)'; ctx.fill();
+  ctx.strokeStyle=rgba(col,active?0.50:0.10); ctx.lineWidth=active?2:1.2; ctx.stroke();
+
+  // Meter icon — dial face with needle
+  ctx.save();
+  ctx.strokeStyle=rgba(col,active?0.70:0.22); ctx.lineWidth=1.5; ctx.lineCap='round';
+  const ir=n.r*0.44;
+  // Arc (lower semicircle for dial)
+  ctx.beginPath();ctx.arc(n.x,n.y,ir,Math.PI*0.85,Math.PI*0.15,false);ctx.stroke();
+  ctx.beginPath();ctx.arc(n.x,n.y,ir,Math.PI*1.0,Math.PI*2.0,false);ctx.stroke();
+  // Tick marks
+  for(let i=0;i<5;i++){
+    const a=Math.PI*(0.85+i*0.3/4);
+    ctx.beginPath();
+    ctx.moveTo(n.x+Math.cos(a)*(ir-5),n.y+Math.sin(a)*(ir-5));
+    ctx.lineTo(n.x+Math.cos(a)*(ir+2),n.y+Math.sin(a)*(ir+2));
+    ctx.stroke();
+  }
+  // Needle — angle based on power magnitude
+  const needleAngle = active
+    ? Math.PI*(0.85 + (abs/MAX_VIZ)*0.3*4*0.55)
+    : Math.PI*1.15;
+  ctx.lineWidth=2; ctx.strokeStyle=active?col:'rgba(255,255,255,0.15)';
+  ctx.beginPath();
+  ctx.moveTo(n.x,n.y);
+  ctx.lineTo(n.x+Math.cos(needleAngle)*ir*0.75, n.y+Math.sin(needleAngle)*ir*0.75);
+  ctx.stroke();
+  // Centre dot
+  ctx.beginPath();ctx.arc(n.x,n.y,3,0,Math.PI*2);
+  ctx.fillStyle=active?col:'rgba(255,255,255,0.2)';ctx.fill();
+  ctx.restore();
+
+  // kW label
+  ctx.textAlign='center'; ctx.textBaseline='alphabetic';
+  ctx.fillStyle=active?'#fff':'rgba(255,255,255,0.18)';
+  ctx.font=`700 ${abs>=10?11:12}px Inter,sans-serif`;
+  ctx.fillText(abs.toFixed(1)+' kW', n.x, n.y+n.r+18);
+
+  // Label
+  ctx.fillStyle=rgba(col,active?0.72:0.24); ctx.font='600 10px Inter,sans-serif';
+  ctx.fillText('METER', n.x, n.y+n.r+30);
+
+  // Importing / Exporting / Idle
+  const sub=pw>0.05?'Importing':pw<-0.05?'Exporting':'Idle';
+  ctx.fillStyle=rgba(col,0.36); ctx.font='400 9px Inter,sans-serif';
+  ctx.fillText(sub, n.x, n.y+n.r+41);
 }
 
 // ── Draw slider track fill to show position visually ──────────
@@ -554,28 +613,61 @@ function frame(){
   ctx.fillStyle='rgba(79,195,247,0.025)';
   for(let x=0;x<W;x+=44)for(let y=0;y<H;y+=44){ctx.beginPath();ctx.arc(x,y,1,0,Math.PI*2);ctx.fill();}
 
-  const bg=ctx.createRadialGradient(JX,JY,0,JX,JY,240);
-  bg.addColorStop(0,'rgba(79,195,247,0.038)');bg.addColorStop(1,'rgba(0,0,0,0)');
+  const bg=ctx.createRadialGradient(640,295,0,640,295,260);
+  bg.addColorStop(0,'rgba(79,195,247,0.030)');bg.addColorStop(1,'rgba(0,0,0,0)');
   ctx.fillStyle=bg;ctx.fillRect(0,0,W,H);
 
   const pw={solar:f.pSolar,grid:f.pGrid,ev:f.pEV,home:f.pHome};
-  Object.keys(NODES).forEach(id=>drawSpoke(NODES[id],pw[id],JX,JY));
+  const sN=NODES.solar, gN=NODES.grid, mN=NODES.meter, hN=NODES.home, eN=NODES.ev;
 
-  Object.keys(NODES).forEach(id=>{
-    const p=pw[id];if(Math.abs(p)<0.05)return;
-    const n=NODES[id],toC=p>0;
-    const [x1,y1,x2,y2]=toC?[n.x,n.y,JX,JY]:[JX,JY,n.x,n.y];
-    drawArrow(x1,y1,x2,y2,n.color,0.55);
-  });
+  // ── Wire lines ──────────────────────────────────────────────
+  // Grid → Meter
+  drawSpoke(gN, f.pGrid, mN.x, mN.y);
+  // Meter → Home
+  drawSpoke(mN, f.pGrid, hN.x, hN.y);
+  // Solar → Home (direct)
+  drawSpoke(sN, f.pSolar, hN.x, hN.y);
+  // EV → Home
+  drawSpoke(eN, f.pEV, hN.x, hN.y);
 
-  Object.keys(NODES).forEach(id=>{
-    const p=pw[id];if(Math.abs(p)<0.05)return;
-    const n=NODES[id];
-    drawParticles(id,n.x,n.y,(n.x+JX)/2,(n.y+JY)/2,JX,JY,n.color);
-  });
+  // ── Direction arrows ─────────────────────────────────────────
+  // Grid ↔ Meter
+  if(Math.abs(f.pGrid)>0.05){
+    const toG = f.pGrid>0;
+    const [gx1,gy1,gx2,gy2]=toG?[gN.x,gN.y,mN.x,mN.y]:[mN.x,mN.y,gN.x,gN.y];
+    drawArrow(gx1,gy1,gx2,gy2,gN.color,0.50);
+    // Meter → Home segment
+    const [mx1,my1,mx2,my2]=toG?[mN.x,mN.y,hN.x,hN.y]:[hN.x,hN.y,mN.x,mN.y];
+    drawArrow(mx1,my1,mx2,my2,mN.color,0.55);
+  }
+  // Solar → Home
+  if(Math.abs(f.pSolar)>0.05){
+    drawArrow(sN.x,sN.y,hN.x,hN.y,sN.color,0.55);
+  }
+  // EV ↔ Home
+  if(Math.abs(f.pEV)>0.05){
+    const toEH=f.pEV>0;
+    const [ex1,ey1,ex2,ey2]=toEH?[eN.x,eN.y,hN.x,hN.y]:[hN.x,hN.y,eN.x,eN.y];
+    drawArrow(ex1,ey1,ex2,ey2,eN.color,0.55);
+  }
 
-  drawJunction(f);
+  // ── Particles ─────────────────────────────────────────────────
+  // Grid → Meter
+  if(Math.abs(f.pGrid)>0.05)
+    drawParticles('grid', gN.x,gN.y,(gN.x+mN.x)/2,(gN.y+mN.y)/2, mN.x,mN.y, gN.color);
+  // Meter → Home
+  if(Math.abs(f.pGrid)>0.05)
+    drawParticles('meter', mN.x,mN.y,(mN.x+hN.x)/2,(mN.y+hN.y)/2, hN.x,hN.y, mN.color);
+  // Solar → Home
+  if(Math.abs(f.pSolar)>0.05)
+    drawParticles('solar', sN.x,sN.y,(sN.x+hN.x)/2,(sN.y+hN.y)/2, hN.x,hN.y, sN.color);
+  // EV ↔ Home
+  if(Math.abs(f.pEV)>0.05)
+    drawParticles('ev', eN.x,eN.y,(eN.x+hN.x)/2,(eN.y+hN.y)/2, hN.x,hN.y, eN.color);
+
   Object.keys(LOAD_NODES).forEach(id=>drawLoadNode(id,f));
+  // Draw meter before home so home ring renders on top
+  drawMeterNode(f);
   ['solar','grid','ev','home'].forEach(id=>drawNode(id,pw[id],f));
 
   const ml=['EV Charging','V2G \u2013 Savings Mode','V2G VPP \u2013 Variable Output','V2G VPP \u2013 Fixed Output'];
