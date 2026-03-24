@@ -26,82 +26,105 @@ header {
   justify-content:space-between;
   padding:18px 20px 6px;
 }
-
 header h1 {
-  font-size:13px;
-  font-weight:700;
-  letter-spacing:3px;
-  text-transform:uppercase;
-  color:rgba(255,255,255,0.55);
+  font-size:13px; font-weight:700; letter-spacing:3px;
+  text-transform:uppercase; color:rgba(255,255,255,0.55);
 }
+#mode-label { font-size:12px; font-weight:500; color:#4fc3f7; letter-spacing:0.3px; }
 
-#mode-label {
-  font-size:12px;
-  font-weight:500;
-  color:#4fc3f7;
-  letter-spacing:0.3px;
-}
+canvas { display:block; cursor:pointer; }
 
-canvas {
-  display:block;
-  cursor:pointer;
-}
-
-/* ── Controls ──────────────────── */
+/* ── Controls ─────────────────────────────── */
 #controls {
-  width:100%;
-  max-width:960px;
+  width:100%; max-width:960px;
   padding:12px 20px 0;
-  display:flex;
-  gap:12px;
-  flex-wrap:wrap;
+  display:flex; gap:12px; flex-wrap:wrap;
 }
-
 .ctrl-block { flex:1; min-width:180px; }
-
 .ctrl-label {
-  font-size:9px;
-  font-weight:700;
-  letter-spacing:2px;
-  text-transform:uppercase;
-  color:rgba(255,255,255,0.22);
-  margin-bottom:7px;
+  font-size:9px; font-weight:700; letter-spacing:2px;
+  text-transform:uppercase; color:rgba(255,255,255,0.22); margin-bottom:7px;
 }
-
 .btn-row { display:flex; flex-direction:column; gap:5px; }
 
 .mode-btn {
   background:rgba(255,255,255,0.03);
   border:1px solid rgba(255,255,255,0.07);
-  border-radius:8px;
-  color:rgba(255,255,255,0.38);
-  font-family:'Inter',sans-serif;
-  font-size:11px; font-weight:500;
-  padding:9px 11px;
-  cursor:pointer;
-  text-align:left;
-  transition:all .15s;
-  line-height:1.4;
+  border-radius:8px; color:rgba(255,255,255,0.38);
+  font-family:'Inter',sans-serif; font-size:11px; font-weight:500;
+  padding:9px 11px; cursor:pointer; text-align:left;
+  transition:all .15s; line-height:1.4;
 }
 .mode-btn:hover { border-color:rgba(255,255,255,0.14); color:rgba(255,255,255,0.6); }
-.mode-btn.active {
-  background:rgba(79,195,247,0.08);
-  border-color:rgba(79,195,247,0.38);
-  color:#fff;
-}
+.mode-btn.active { background:rgba(79,195,247,0.08); border-color:rgba(79,195,247,0.38); color:#fff; }
 .mode-btn .num { color:rgba(79,195,247,0.65); font-weight:700; margin-right:2px; }
 .mode-sub { color:rgba(255,255,255,0.22); font-size:9.5px; display:block; margin-top:2px; }
 .mode-btn.active .mode-sub { color:rgba(79,195,247,0.45); }
 
+/* ── Slider block ─────────────────────────── */
+.slider-block {
+  display:flex; flex-direction:column; gap:14px;
+  padding:12px 14px;
+  background:rgba(255,255,255,0.02);
+  border:1px solid rgba(255,255,255,0.06);
+  border-radius:10px;
+  min-width:220px; flex:1;
+}
+
+.slider-row { display:flex; flex-direction:column; gap:6px; }
+
+.slider-header {
+  display:flex; justify-content:space-between; align-items:baseline;
+}
+.slider-name {
+  font-size:11px; font-weight:600; color:rgba(255,255,255,0.55);
+  letter-spacing:0.3px;
+}
+.slider-val {
+  font-size:13px; font-weight:700; font-variant-numeric:tabular-nums;
+  letter-spacing:0.2px;
+}
+
+/* Custom range slider */
+input[type=range] {
+  -webkit-appearance:none; appearance:none;
+  width:100%; height:4px; border-radius:2px;
+  outline:none; cursor:pointer;
+  background: #1e2430;
+}
+input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance:none; appearance:none;
+  width:16px; height:16px; border-radius:50%;
+  border:2px solid currentColor;
+  background:#090c10;
+  cursor:pointer;
+  transition:transform .12s;
+}
+input[type=range]::-webkit-slider-thumb:hover { transform:scale(1.2); }
+input[type=range]::-moz-range-thumb {
+  width:16px; height:16px; border-radius:50%;
+  border:2px solid currentColor; background:#090c10; cursor:pointer;
+}
+
+/* Color-coded sliders */
+#ev-slider  { accent-color:#4cd964; color:#4cd964; }
+#ev-slider::-webkit-slider-thumb { border-color:#4cd964; }
+#sol-slider { accent-color:#f5a623; color:#f5a623; }
+#sol-slider::-webkit-slider-thumb { border-color:#f5a623; }
+
+.slider-limits {
+  display:flex; justify-content:space-between;
+  font-size:9px; color:rgba(255,255,255,0.18); margin-top:-2px;
+}
+
+/* Solar toggle inline */
 .solar-toggle {
   display:flex; align-items:center; gap:9px;
   padding:9px 11px;
   background:rgba(255,255,255,0.03);
   border:1px solid rgba(255,255,255,0.07);
-  border-radius:8px;
-  cursor:pointer; user-select:none;
-  transition:border-color .16s;
-  width:fit-content;
+  border-radius:8px; cursor:pointer; user-select:none;
+  transition:border-color .16s; width:fit-content;
 }
 .solar-toggle.on { border-color:rgba(245,166,35,0.35); background:rgba(245,166,35,0.06); }
 .pip { width:28px; height:15px; background:#1a1a1a; border-radius:8px; position:relative; flex-shrink:0; }
@@ -121,20 +144,22 @@ canvas {
 <canvas id="c" width="960" height="580"></canvas>
 
 <div id="controls">
+
+  <!-- Mode buttons -->
   <div class="ctrl-block">
     <div class="ctrl-label">Operation Mode</div>
     <div class="btn-row">
       <button class="mode-btn active" data-mode="0">
         <span class="num">①</span> EV Charging
-        <span class="mode-sub">Grid + Solar → EV at 7.2 kW L2</span>
+        <span class="mode-sub">Grid + Solar → EV</span>
       </button>
       <button class="mode-btn" data-mode="1">
-        <span class="num">②</span> V2G – Bill Savings
+        <span class="num">②</span> V2G – Savings Mode
         <span class="mode-sub">EV covers load, TOU or Self Consumption</span>
       </button>
       <button class="mode-btn" data-mode="2">
         <span class="num">③</span> V2G VPP – Variable Output
-        <span class="mode-sub">EV discharges variable amount of power to avoid import/export</span>
+        <span class="mode-sub">EV discharges variable amount to avoid import/export</span>
       </button>
       <button class="mode-btn" data-mode="3">
         <span class="num">④</span> V2G VPP – Fixed Output
@@ -142,13 +167,38 @@ canvas {
       </button>
     </div>
   </div>
-  <div class="ctrl-block" style="max-width:200px">
-    <div class="ctrl-label">Generation</div>
+
+  <!-- Sliders -->
+  <div class="slider-block">
+    <div class="ctrl-label" style="margin-bottom:2px">Power Settings</div>
+
+    <!-- EV Rate -->
+    <div class="slider-row">
+      <div class="slider-header">
+        <span class="slider-name">⚡ EV Charge / Discharge Rate</span>
+        <span class="slider-val" id="ev-val" style="color:#4cd964">7.2 kW</span>
+      </div>
+      <input type="range" id="ev-slider" min="0.5" max="11.5" step="0.1" value="7.2">
+      <div class="slider-limits"><span>0.5 kW</span><span>11.5 kW max</span></div>
+    </div>
+
+    <!-- Solar -->
+    <div class="slider-row">
+      <div class="slider-header">
+        <span class="slider-name">☀ Solar PV Production</span>
+        <span class="slider-val" id="sol-val" style="color:#f5a623">4.0 kW</span>
+      </div>
+      <input type="range" id="sol-slider" min="0" max="8" step="0.1" value="4.0">
+      <div class="slider-limits"><span>0 kW</span><span>8.0 kW max</span></div>
+    </div>
+
+    <!-- Solar on/off toggle -->
     <div class="solar-toggle on" id="solar-toggle">
       <div class="pip"></div>
-      <span>☀ Solar PV — 4.0 kW</span>
+      <span>Solar PV enabled</span>
     </div>
   </div>
+
 </div>
 
 <script>
@@ -158,33 +208,31 @@ const ctx    = canvas.getContext('2d');
 const W = 960, H = 580;
 
 // ── Constants ─────────────────────────────
-const SOLAR_KW  = 4.0;
-const CHARGE_KW = 11.5;
-const MAX_DISCH = 11.5;
+const MAX_EV    = 11.5;
+const MAX_SOLAR = 8.0;
 const MAX_VIZ   = 16;
 
 // ── State ─────────────────────────────────
 const S = {
-  mode: 0,
-  solar: true,
-  tick: 0,
-  loads: { hvac:true, stove:false, dryer:false, hwh:false },
-  loadKW:{ hvac:3.5,  stove:5.5,   dryer:5.0,   hwh:4.5 },
+  mode:     0,
+  solar:    true,
+  solarKW:  4.0,   // controlled by slider
+  evRateKW: 7.2,   // controlled by slider (charge AND discharge rate)
+  tick:     0,
+  loads:    { hvac:true, stove:false, dryer:false, hwh:false },
+  loadKW:   { hvac:3.5,  stove:5.5,   dryer:5.0,   hwh:4.5  },
 };
 
-// ── Layout ─────────────────────────────────
-// Diamond centre
+// ── Layout ────────────────────────────────
 const JX = 420, JY = 295;
 
-// Main nodes
 const NODES = {
-  solar: { x:420,  y:68,   r:52, color:'#f5a623', label:'Solar' },
-  grid:  { x:78,   y:295,  r:52, color:'#9b9b9b', label:'Grid'  },
-  home:  { x:640,  y:295,  r:52, color:'#4fc3f7', label:'Home'  },
-  ev:    { x:420,  y:520,  r:52, color:'#4cd964', label:'EV'    },
+  solar: { x:420, y:68,  r:52, color:'#f5a623', label:'Solar' },
+  grid:  { x:78,  y:295, r:52, color:'#9b9b9b', label:'Grid'  },
+  home:  { x:640, y:295, r:52, color:'#4fc3f7', label:'Home'  },
+  ev:    { x:420, y:520, r:52, color:'#4cd964', label:'EV'    },
 };
 
-// Load nodes (branch from Home toward right side)
 const LOAD_NODES = {
   hvac:  { x:870, y:148, r:30, color:'#38bdf8', label:'HVAC',         kw:3.5, icon:'❄' },
   stove: { x:870, y:258, r:30, color:'#fb923c', label:'Stove',        kw:5.5, icon:'♨' },
@@ -192,26 +240,38 @@ const LOAD_NODES = {
   hwh:   { x:870, y:478, r:30, color:'#f87171', label:'Water Heater', kw:4.5, icon:'🔥' },
 };
 
-// ── Power math ────────────────────────────
+// ── Power math (KCL at panel) ─────────────
 function calcFlows() {
-  const sol  = S.solar ? SOLAR_KW : 0;
+  const sol  = S.solar ? S.solarKW : 0;
+  const rate = S.evRateKW;  // used for both charge rate and max discharge
   const load = Object.keys(S.loads).reduce((t,k) => t+(S.loads[k]?S.loadKW[k]:0), 0);
   let pSolar=sol, pGrid=0, pEV=0;
   const pHome = -load;
+
   switch(S.mode) {
-    case 0: pEV=-CHARGE_KW; pGrid=load+CHARGE_KW-sol; break;
-    case 1: { const n=load-sol; pEV=n<=0?0:Math.min(MAX_DISCH,n); pGrid=n<=0?n:n-pEV; } break;
-    case 2: { const sig=Math.sin(S.tick/48)*0.6, n=load-sol;
-              if(n<=0){pEV=0;pGrid=n+sig*0.3;}
-              else{pEV=Math.min(MAX_DISCH,Math.max(0,n+sig));pGrid=n-pEV;} } break;
-    case 3: pEV=MAX_DISCH; pGrid=load-sol-MAX_DISCH; break;
+    case 0: // EV Charging — charge at slider rate
+      pEV   = -rate;
+      pGrid = load + rate - sol;
+      break;
+    case 1: // V2G Savings — EV discharges up to slider rate to cover load
+      { const net = load - sol;
+        pEV   = net <= 0 ? 0 : Math.min(rate, net);
+        pGrid = net <= 0 ? net : net - pEV; }
+      break;
+    case 2: // V2G VPP Variable — EV tracks net-zero, capped at slider rate
+      { const sig = Math.sin(S.tick/48)*0.6, net = load - sol;
+        if(net <= 0){ pEV=0; pGrid=net+sig*0.3; }
+        else{ pEV=Math.min(rate,Math.max(0,net+sig)); pGrid=net-pEV; } }
+      break;
+    case 3: // V2G VPP Fixed — EV discharges at slider rate, surplus exports
+      pEV   = rate;
+      pGrid = load - sol - rate;
+      break;
   }
   return {pSolar,pGrid,pEV,pHome,load,sol};
 }
 
-// ── Particle pools ────────────────────────
-// Main spokes: solar, grid, ev, home
-// Load branches: hvac, stove, dryer, hwh
+// ── Particles ─────────────────────────────
 const parts = {solar:[],grid:[],ev:[],home:[],hvac:[],stove:[],dryer:[],hwh:[]};
 
 function rgba(hex,a){
@@ -221,15 +281,14 @@ function rgba(hex,a){
 function lerp(a,b,t){return a+(b-a)*t;}
 function bez(t,fx,fy,cpx,cpy,tx,ty){const m=1-t;return{x:m*m*fx+2*m*t*cpx+t*t*tx,y:m*m*fy+2*m*t*cpy+t*t*ty};}
 
-function spawnPart(pool, pw, toCenter) {
+function spawnPart(pool,pw,toCenter){
   const abs=Math.abs(pw);
   const spd=(abs/MAX_VIZ)*0.020+0.007;
   const delay=Math.max(5,Math.round(26-(abs/MAX_VIZ)*17));
   if(S.tick%delay===0) pool.push({t:toCenter?0.04:0.96,dir:toCenter?1:-1,abs,spd});
 }
 
-function tickParts(flows) {
-  // Main spokes: +pw = toward junction
+function tickParts(flows){
   const main={solar:flows.pSolar,grid:flows.pGrid,ev:flows.pEV,home:flows.pHome};
   Object.keys(main).forEach(id=>{
     const pw=main[id],abs=Math.abs(pw);
@@ -237,109 +296,91 @@ function tickParts(flows) {
     spawnPart(parts[id],pw,pw>0);
     parts[id]=parts[id].filter(p=>{p.t+=p.dir*p.spd;return p.t>=0&&p.t<=1;});
   });
-  // Load branches: power always flows Home→Load (positive = active)
   Object.keys(LOAD_NODES).forEach(id=>{
     const pw=S.loads[id]?S.loadKW[id]:0;
     if(pw<0.05){parts[id]=[];return;}
-    spawnPart(parts[id],pw,true); // true = t goes 0→1, i.e. Home → Load
+    spawnPart(parts[id],pw,true);
     parts[id]=parts[id].filter(p=>{p.t+=p.dir*p.spd;return p.t>=0&&p.t<=1;});
   });
 }
 
-function drawParticles(id, fx,fy,cpx,cpy,tx,ty, color) {
+function drawParticles(id,fx,fy,cpx,cpy,tx,ty,color){
   parts[id].forEach(p=>{
     const pos=bez(p.t,fx,fy,cpx,cpy,tx,ty);
     const r=2.2+(p.abs/MAX_VIZ)*2.5;
     const g=ctx.createRadialGradient(pos.x,pos.y,0,pos.x,pos.y,r*3.2);
-    g.addColorStop(0,rgba(color,0.90));
-    g.addColorStop(0.4,rgba(color,0.28));
-    g.addColorStop(1,rgba(color,0));
+    g.addColorStop(0,rgba(color,0.90)); g.addColorStop(0.4,rgba(color,0.28)); g.addColorStop(1,rgba(color,0));
     ctx.beginPath();ctx.arc(pos.x,pos.y,r*3.2,0,Math.PI*2);ctx.fillStyle=g;ctx.fill();
     ctx.beginPath();ctx.arc(pos.x,pos.y,r*0.52,0,Math.PI*2);ctx.fillStyle='#fff';ctx.fill();
   });
 }
 
-// ── Draw a spoke line (straight, node→junction) ──────────────
-function drawSpoke(n, pw, toJX, toJY) {
-  const abs=Math.abs(pw), active=abs>0.05;
+function drawSpoke(n,pw,toJX,toJY){
+  const abs=Math.abs(pw),active=abs>0.05;
   ctx.save();
   ctx.strokeStyle=active?rgba(n.color,0.20):'rgba(255,255,255,0.04)';
-  ctx.lineWidth=active?2:1.5; ctx.lineCap='round';
-  ctx.beginPath(); ctx.moveTo(n.x,n.y); ctx.lineTo(toJX,toJY); ctx.stroke();
+  ctx.lineWidth=active?2:1.5;ctx.lineCap='round';
+  ctx.beginPath();ctx.moveTo(n.x,n.y);ctx.lineTo(toJX,toJY);ctx.stroke();
   ctx.restore();
 }
 
-// ── Draw direction arrow along a straight path ───────────────
-function drawArrow(x1,y1,x2,y2,col,t=0.58) {
-  const ax=lerp(x1,x2,t), ay=lerp(y1,y2,t);
-  const ang=Math.atan2(y2-y1,x2-x1), sz=5.5;
+function drawArrow(x1,y1,x2,y2,col,t=0.58){
+  const ax=lerp(x1,x2,t),ay=lerp(y1,y2,t);
+  const ang=Math.atan2(y2-y1,x2-x1),sz=5.5;
   ctx.save();
-  ctx.strokeStyle=rgba(col,0.42); ctx.lineWidth=1.5; ctx.lineCap='round';
+  ctx.strokeStyle=rgba(col,0.42);ctx.lineWidth=1.5;ctx.lineCap='round';
   ctx.beginPath();
   ctx.moveTo(ax-Math.cos(ang-0.45)*sz,ay-Math.sin(ang-0.45)*sz);
   ctx.lineTo(ax,ay);
   ctx.lineTo(ax-Math.cos(ang+0.45)*sz,ay-Math.sin(ang+0.45)*sz);
-  ctx.stroke(); ctx.restore();
+  ctx.stroke();ctx.restore();
 }
 
-// ── Draw a main node circle ───────────────────────────────────
-function drawNode(id, pw, flows) {
-  const n=NODES[id], abs=Math.abs(pw);
+function drawNode(id,pw,flows){
+  const n=NODES[id],abs=Math.abs(pw);
   const active=abs>0.05||id==='home';
   const col=n.color;
   const rgb={r:parseInt(col.slice(1,3),16),g:parseInt(col.slice(3,5),16),b:parseInt(col.slice(5,7),16)};
 
-  // Outer ambient glow
   const g1=ctx.createRadialGradient(n.x,n.y,n.r*0.4,n.x,n.y,n.r*2.5);
   g1.addColorStop(0,`rgba(${rgb.r},${rgb.g},${rgb.b},${active?0.16:0.03})`);
   g1.addColorStop(1,`rgba(${rgb.r},${rgb.g},${rgb.b},0)`);
   ctx.beginPath();ctx.arc(n.x,n.y,n.r*2.5,0,Math.PI*2);ctx.fillStyle=g1;ctx.fill();
 
-  // Body fill
   ctx.beginPath();ctx.arc(n.x,n.y,n.r,0,Math.PI*2);
   ctx.fillStyle=`rgba(${rgb.r},${rgb.g},${rgb.b},0.09)`;ctx.fill();
 
-  // Ring
   ctx.beginPath();ctx.arc(n.x,n.y,n.r,0,Math.PI*2);
   ctx.strokeStyle=`rgba(${rgb.r},${rgb.g},${rgb.b},${active?0.65:0.12})`;
-  ctx.lineWidth=active?2.5:1.5; ctx.stroke();
+  ctx.lineWidth=active?2.5:1.5;ctx.stroke();
 
-  // Pulse ring
   if(active){
     const p=0.4+0.6*Math.abs(Math.sin(S.tick/42+n.x*0.01));
     ctx.beginPath();ctx.arc(n.x,n.y,n.r+5+p*5,0,Math.PI*2);
     ctx.strokeStyle=`rgba(${rgb.r},${rgb.g},${rgb.b},${0.07+p*0.09})`;ctx.lineWidth=1.5;ctx.stroke();
   }
 
-  // Icon
   const iconCol=active?col:rgba(col,0.28);
-  if(id==='ev'){
-    drawTruckIcon(n.x,n.y,n.r*0.80,iconCol,active);
-  } else {
-    drawNodeIcon(id,n.x,n.y,n.r*0.38,iconCol);
-  }
+  if(id==='ev') drawTruckIcon(n.x,n.y,n.r*0.80,iconCol,active);
+  else drawNodeIcon(id,n.x,n.y,n.r*0.38,iconCol);
 
-  // kW label, name, and status — above node for EV (bottom node gets clipped), below for all others
-  const dispKW=id==='home'?flows.load:abs;
-  const above = id==='ev';
-  const baseY = above ? n.y - n.r - 8 : n.y + n.r + 22;
-  const step  = above ? -14 : 14;
+  // Labels — EV draws above to avoid canvas clip, others below
+  const dispKW = id==='home' ? flows.load : abs;
+  const above  = id==='ev';
+  const baseY  = above ? n.y - n.r - 8 : n.y + n.r + 22;
+  const step   = above ? -14 : 14;
 
-  ctx.textAlign='center';
+  ctx.textAlign='center'; ctx.textBaseline='alphabetic';
 
-  // kW
   ctx.fillStyle=active?'#fff':'rgba(255,255,255,0.25)';
   ctx.font=`700 ${dispKW>=10?13:15}px Inter,sans-serif`;
-  ctx.textBaseline = above ? 'alphabetic' : 'alphabetic';
   ctx.fillText(dispKW.toFixed(1)+' kW', n.x, baseY);
 
-  // Label
-  ctx.fillStyle=rgba(col,active?0.78:0.28); ctx.font='600 11px Inter,sans-serif';
-  ctx.fillText(n.label.toUpperCase(), n.x, baseY + step);
+  ctx.fillStyle=rgba(col,active?0.78:0.28);ctx.font='600 11px Inter,sans-serif';
+  ctx.fillText(n.label.toUpperCase(), n.x, baseY+step);
 
-  // Sub status
-  ctx.fillStyle=rgba(col,0.38); ctx.font='400 9.5px Inter,sans-serif';
-  ctx.fillText(nodeSub(id,pw,flows), n.x, baseY + step*2);
+  ctx.fillStyle=rgba(col,0.38);ctx.font='400 9.5px Inter,sans-serif';
+  ctx.fillText(nodeSub(id,pw,flows), n.x, baseY+step*2);
 }
 
 function nodeSub(id,pw,flows){
@@ -350,9 +391,8 @@ function nodeSub(id,pw,flows){
   return '';
 }
 
-// ── Standard icon drawing ─────────────────────────────────────
 function drawNodeIcon(id,x,y,r,col){
-  ctx.save(); ctx.strokeStyle=col; ctx.fillStyle=col; ctx.lineWidth=2; ctx.lineCap='round';
+  ctx.save();ctx.strokeStyle=col;ctx.fillStyle=col;ctx.lineWidth=2;ctx.lineCap='round';
   switch(id){
     case 'solar':
       ctx.beginPath();ctx.arc(x,y,r*0.42,0,Math.PI*2);ctx.fill();
@@ -376,114 +416,63 @@ function drawNodeIcon(id,x,y,r,col){
   ctx.restore();
 }
 
-// ── Truck icon (GMC Sierra EV side profile) ───────────────────
-function drawTruckIcon(cx, cy, size, col, active) {
+function drawTruckIcon(cx,cy,size,col,active){
   ctx.save();
-  const s = size * 0.85;
-  // Offset so truck is visually centered in node
-  const ox = cx - s * 0.88, oy = cy - s * 0.30;
+  const s=size*0.85;
+  const ox=cx-s*0.88, oy=cy-s*0.30;
+  ctx.strokeStyle=col; ctx.fillStyle=rgba(col,0.18);
+  ctx.lineWidth=active?1.8:1.3; ctx.lineCap='round'; ctx.lineJoin='round';
 
-  ctx.strokeStyle = col;
-  ctx.fillStyle   = rgba(col, 0.18);
-  ctx.lineWidth   = active ? 1.8 : 1.3;
-  ctx.lineCap     = 'round';
-  ctx.lineJoin    = 'round';
-
-  // ── Truck body silhouette ──
-  // Bed (rear left)
   ctx.beginPath();
-  ctx.moveTo(ox,            oy + s*0.55);  // bottom-left
-  ctx.lineTo(ox,            oy + s*0.05);  // bed wall top
-  ctx.lineTo(ox + s*0.52,   oy + s*0.05);  // bed top-right
-  ctx.lineTo(ox + s*0.52,   oy + s*0.55);  // bottom connector
-  ctx.closePath();
-  ctx.fill(); ctx.stroke();
+  ctx.moveTo(ox,oy+s*0.55);ctx.lineTo(ox,oy+s*0.05);ctx.lineTo(ox+s*0.52,oy+s*0.05);ctx.lineTo(ox+s*0.52,oy+s*0.55);
+  ctx.closePath();ctx.fill();ctx.stroke();
 
-  // Cab (front right)
   ctx.beginPath();
-  ctx.moveTo(ox + s*0.52,   oy + s*0.55);  // cab bottom-left
-  ctx.lineTo(ox + s*0.52,   oy - s*0.08);  // cab rear-bottom
-  ctx.lineTo(ox + s*0.62,   oy - s*0.30);  // cab rear-top
-  ctx.lineTo(ox + s*0.90,   oy - s*0.38);  // roof back
-  ctx.lineTo(ox + s*1.20,   oy - s*0.36);  // roof front
-  ctx.lineTo(ox + s*1.40,   oy - s*0.18);  // windshield top
-  ctx.lineTo(ox + s*1.52,   oy + s*0.02);  // hood
-  ctx.lineTo(ox + s*1.60,   oy + s*0.20);  // front upper
-  ctx.lineTo(ox + s*1.60,   oy + s*0.55);  // front lower
-  ctx.closePath();
-  ctx.fill(); ctx.stroke();
+  ctx.moveTo(ox+s*0.52,oy+s*0.55);ctx.lineTo(ox+s*0.52,oy-s*0.08);ctx.lineTo(ox+s*0.62,oy-s*0.30);
+  ctx.lineTo(ox+s*0.90,oy-s*0.38);ctx.lineTo(ox+s*1.20,oy-s*0.36);ctx.lineTo(ox+s*1.40,oy-s*0.18);
+  ctx.lineTo(ox+s*1.52,oy+s*0.02);ctx.lineTo(ox+s*1.60,oy+s*0.20);ctx.lineTo(ox+s*1.60,oy+s*0.55);
+  ctx.closePath();ctx.fill();ctx.stroke();
 
-  // ── Window ──
-  ctx.fillStyle = rgba(col, 0.22);
-  ctx.strokeStyle = rgba(col, 0.45);
-  ctx.lineWidth = 1;
+  ctx.fillStyle=rgba(col,0.22);ctx.strokeStyle=rgba(col,0.45);ctx.lineWidth=1;
   ctx.beginPath();
-  ctx.moveTo(ox + s*0.54,  oy + s*0.00);
-  ctx.lineTo(ox + s*0.64,  oy - s*0.24);
-  ctx.lineTo(ox + s*0.88,  oy - s*0.32);
-  ctx.lineTo(ox + s*1.18,  oy - s*0.30);
-  ctx.lineTo(ox + s*1.34,  oy - s*0.14);
-  ctx.lineTo(ox + s*1.34,  oy + s*0.00);
-  ctx.closePath();
-  ctx.fill(); ctx.stroke();
+  ctx.moveTo(ox+s*0.54,oy+s*0.00);ctx.lineTo(ox+s*0.64,oy-s*0.24);ctx.lineTo(ox+s*0.88,oy-s*0.32);
+  ctx.lineTo(ox+s*1.18,oy-s*0.30);ctx.lineTo(ox+s*1.34,oy-s*0.14);ctx.lineTo(ox+s*1.34,oy+s*0.00);
+  ctx.closePath();ctx.fill();ctx.stroke();
 
-  // ── Wheels ──
-  ctx.lineWidth = active ? 1.8 : 1.3;
-  ctx.strokeStyle = col;
-  ctx.fillStyle   = rgba(col, 0.08);
-  [ox + s*0.28, ox + s*1.28].forEach(wx => {
-    const wy = oy + s*0.68;
+  ctx.lineWidth=active?1.8:1.3;ctx.strokeStyle=col;ctx.fillStyle=rgba(col,0.08);
+  [ox+s*0.28,ox+s*1.28].forEach(wx=>{
+    const wy=oy+s*0.68;
     ctx.beginPath();ctx.arc(wx,wy,s*0.22,0,Math.PI*2);ctx.fill();ctx.stroke();
-    // Rim
-    ctx.fillStyle=rgba(col,0.30);
-    ctx.beginPath();ctx.arc(wx,wy,s*0.10,0,Math.PI*2);ctx.fill();
+    ctx.fillStyle=rgba(col,0.30);ctx.beginPath();ctx.arc(wx,wy,s*0.10,0,Math.PI*2);ctx.fill();
     ctx.fillStyle=rgba(col,0.08);
   });
 
-  // ── Headlight ──
   ctx.fillStyle=rgba('#fffbe6',active?0.55:0.18);
   ctx.beginPath();ctx.ellipse(ox+s*1.595,oy+s*0.18,s*0.04,s*0.09,0,0,Math.PI*2);ctx.fill();
-
-  // ── Tail light ──
   ctx.fillStyle=rgba('#ff4444',active?0.45:0.14);
   ctx.beginPath();ctx.ellipse(ox+s*0.018,oy+s*0.25,s*0.03,s*0.08,0,0,Math.PI*2);ctx.fill();
 
-  // ── EV badge ──
   if(active){
     ctx.fillStyle=rgba(col,0.65);
     ctx.font=`700 ${Math.round(s*0.18)}px Inter,sans-serif`;
-    ctx.textAlign='center'; ctx.textBaseline='middle';
-    ctx.fillText('EV', ox+s*0.90, oy+s*0.32);
+    ctx.textAlign='center';ctx.textBaseline='middle';
+    ctx.fillText('EV',ox+s*0.90,oy+s*0.32);
   }
-
   ctx.restore();
 }
 
-// ── Draw a load node ──────────────────────────────────────────
-function drawLoadNode(id, flows) {
-  const n = LOAD_NODES[id];
-  const on = S.loads[id];
-  const col = on ? n.color : '#2a3040';
-  const glow = on ? 0.60 : 0.10;
+function drawLoadNode(id,flows){
+  const n=LOAD_NODES[id],on=S.loads[id];
+  const col=on?n.color:'#2a3040';
+  const home=NODES.home;
+  const cpx=(home.x+n.x)/2,cpy=n.y;
 
-  // Faint wire from home to load
-  const home = NODES.home;
-  // Control point arcs upward/downward from home
-  const cpx = (home.x + n.x) / 2;
-  const cpy = n.y;
   ctx.save();
-  ctx.strokeStyle = on ? rgba(n.color, 0.18) : 'rgba(255,255,255,0.04)';
-  ctx.lineWidth   = on ? 1.8 : 1.2;
-  ctx.setLineDash(on ? [] : [4,5]);
-  ctx.lineCap='round';
-  ctx.beginPath();
-  ctx.moveTo(home.x, home.y);
-  ctx.quadraticCurveTo(cpx, cpy, n.x, n.y);
-  ctx.stroke();
-  ctx.setLineDash([]);
-  ctx.restore();
+  ctx.strokeStyle=on?rgba(n.color,0.18):'rgba(255,255,255,0.04)';
+  ctx.lineWidth=on?1.8:1.2;ctx.setLineDash(on?[]:[4,5]);ctx.lineCap='round';
+  ctx.beginPath();ctx.moveTo(home.x,home.y);ctx.quadraticCurveTo(cpx,cpy,n.x,n.y);ctx.stroke();
+  ctx.setLineDash([]);ctx.restore();
 
-  // Arrow (only when on)
   if(on){
     const tm=0.62;
     const pm=bez(tm,home.x,home.y,cpx,cpy,n.x,n.y);
@@ -495,61 +484,44 @@ function drawLoadNode(id, flows) {
     ctx.lineTo(pm2.x,pm2.y);
     ctx.lineTo(pm2.x-Math.cos(ang+0.45)*sz,pm2.y-Math.sin(ang+0.45)*sz);
     ctx.stroke();ctx.restore();
+    drawParticles(id,home.x,home.y,cpx,cpy,n.x,n.y,n.color);
   }
 
-  // Particles on active load branch
-  if(on){
-    drawParticles(id, home.x,home.y,cpx,cpy,n.x,n.y, n.color);
-  }
-
-  // Glow
   if(on){
     const ag=ctx.createRadialGradient(n.x,n.y,n.r*0.3,n.x,n.y,n.r*2.2);
     ag.addColorStop(0,rgba(n.color,0.14));ag.addColorStop(1,rgba(n.color,0));
     ctx.beginPath();ctx.arc(n.x,n.y,n.r*2.2,0,Math.PI*2);ctx.fillStyle=ag;ctx.fill();
   }
 
-  // Node body
   ctx.beginPath();ctx.arc(n.x,n.y,n.r,0,Math.PI*2);
   ctx.fillStyle=on?rgba(n.color,0.10):'rgba(255,255,255,0.03)';ctx.fill();
-  ctx.strokeStyle=rgba(on?n.color:'#2a3040',glow);
+  ctx.strokeStyle=rgba(on?n.color:'#2a3040',on?0.60:0.10);
   ctx.lineWidth=on?2:1.2;ctx.stroke();
 
-  // Pulse
   if(on){
     const p=0.4+0.6*Math.abs(Math.sin(S.tick/44+n.x*0.012));
     ctx.beginPath();ctx.arc(n.x,n.y,n.r+4+p*4,0,Math.PI*2);
     ctx.strokeStyle=rgba(n.color,0.06+p*0.07);ctx.lineWidth=1.2;ctx.stroke();
   }
 
-  // Emoji icon
-  ctx.font=`${on?20:16}px sans-serif`;
-  ctx.textAlign='center';ctx.textBaseline='middle';
-  ctx.globalAlpha=on?0.90:0.28;
-  ctx.fillText(n.icon, n.x, n.y-3);
-  ctx.globalAlpha=1;
+  ctx.font=`${on?20:16}px sans-serif`;ctx.textAlign='center';ctx.textBaseline='middle';
+  ctx.globalAlpha=on?0.90:0.28;ctx.fillText(n.icon,n.x,n.y-3);ctx.globalAlpha=1;
 
-  // kW value
   ctx.fillStyle=on?n.color:'rgba(255,255,255,0.18)';
-  ctx.font=`700 10.5px Inter,sans-serif`;
-  ctx.textAlign='center';ctx.textBaseline='alphabetic';
-  ctx.fillText(n.kw.toFixed(1)+' kW', n.x, n.y+n.r+16);
+  ctx.font='700 10.5px Inter,sans-serif';ctx.textAlign='center';ctx.textBaseline='alphabetic';
+  ctx.fillText(n.kw.toFixed(1)+' kW',n.x,n.y+n.r+16);
 
-  // Label
   ctx.fillStyle=on?rgba(n.color,0.68):'rgba(255,255,255,0.18)';
   ctx.font='500 9.5px Inter,sans-serif';
-  ctx.fillText(n.label.toUpperCase(), n.x, n.y+n.r+28);
+  ctx.fillText(n.label.toUpperCase(),n.x,n.y+n.r+28);
 
-  // Click target visual indicator (subtle underline when off)
   if(!on){
-    ctx.fillStyle='rgba(255,255,255,0.10)';
-    ctx.font='500 8px Inter,sans-serif';
-    ctx.fillText('tap to add', n.x, n.y+n.r+40);
+    ctx.fillStyle='rgba(255,255,255,0.10)';ctx.font='500 8px Inter,sans-serif';
+    ctx.fillText('tap to add',n.x,n.y+n.r+40);
   }
 }
 
-// ── Junction dot ─────────────────────────
-function drawJunction(flows) {
+function drawJunction(flows){
   const tot=Math.abs(flows.pSolar)+Math.abs(flows.pGrid)+Math.abs(flows.pEV);
   if(tot<0.1) return;
   const p=0.5+0.5*Math.sin(S.tick/26);
@@ -559,78 +531,64 @@ function drawJunction(flows) {
   ctx.fillStyle='rgba(255,255,255,0.55)';ctx.fill();
 }
 
+// ── Draw slider track fill to show position visually ──────────
+function updateSliderFill(slider, color) {
+  const pct = ((slider.value - slider.min) / (slider.max - slider.min)) * 100;
+  slider.style.background = `linear-gradient(to right, ${color} 0%, ${color} ${pct}%, #1e2430 ${pct}%, #1e2430 100%)`;
+}
+
 // ── Main render ───────────────────────────
-function frame() {
-  const f = calcFlows();
+function frame(){
+  const f=calcFlows();
   tickParts(f);
 
-  // Background
   ctx.fillStyle='#090c10';ctx.fillRect(0,0,W,H);
 
-  // Subtle grid dots
   ctx.fillStyle='rgba(79,195,247,0.025)';
   for(let x=0;x<W;x+=44)for(let y=0;y<H;y+=44){ctx.beginPath();ctx.arc(x,y,1,0,Math.PI*2);ctx.fill();}
 
-  // Center glow
   const bg=ctx.createRadialGradient(JX,JY,0,JX,JY,240);
   bg.addColorStop(0,'rgba(79,195,247,0.038)');bg.addColorStop(1,'rgba(0,0,0,0)');
   ctx.fillStyle=bg;ctx.fillRect(0,0,W,H);
 
-  // ── Spoke lines (before nodes) ──
   const pw={solar:f.pSolar,grid:f.pGrid,ev:f.pEV,home:f.pHome};
   Object.keys(NODES).forEach(id=>drawSpoke(NODES[id],pw[id],JX,JY));
 
-  // ── Direction arrows on main spokes ──
   Object.keys(NODES).forEach(id=>{
-    const p=pw[id]; if(Math.abs(p)<0.05) return;
+    const p=pw[id];if(Math.abs(p)<0.05)return;
     const n=NODES[id],toC=p>0;
     const [x1,y1,x2,y2]=toC?[n.x,n.y,JX,JY]:[JX,JY,n.x,n.y];
     drawArrow(x1,y1,x2,y2,n.color,0.55);
   });
 
-  // ── Particles on main spokes ──
   Object.keys(NODES).forEach(id=>{
-    const p=pw[id]; if(Math.abs(p)<0.05) return;
+    const p=pw[id];if(Math.abs(p)<0.05)return;
     const n=NODES[id];
-    drawParticles(id, n.x,n.y,(n.x+JX)/2,(n.y+JY)/2,JX,JY, n.color);
+    drawParticles(id,n.x,n.y,(n.x+JX)/2,(n.y+JY)/2,JX,JY,n.color);
   });
 
-  // ── Junction ──
   drawJunction(f);
-
-  // ── Load nodes (behind Home node layer-wise) ──
   Object.keys(LOAD_NODES).forEach(id=>drawLoadNode(id,f));
-
-  // ── Main nodes ──
   ['solar','grid','ev','home'].forEach(id=>drawNode(id,pw[id],f));
 
-  // ── Update header status ──
-  const ml=['EV Charging','V2G \u2013 Savings Mode','V2G VPP \u2013 VPP Variable Output','V2G VPP \u2013 VPP Fixed Output'];
+  const ml=['EV Charging','V2G \u2013 Savings Mode','V2G VPP \u2013 Variable Output','V2G VPP \u2013 Fixed Output'];
   const mc=['#4fc3f7','#f5a623','#4cd964','#c084fc'];
   const st=document.getElementById('mode-label');
-  st.textContent=ml[S.mode]; st.style.color=mc[S.mode];
+  st.textContent=ml[S.mode];st.style.color=mc[S.mode];
 
   S.tick++;
   requestAnimationFrame(frame);
 }
 
-// ── Hit test: is a point inside a load node? ─────────────────
-function hitLoadNode(mx,my) {
-  for(const id of Object.keys(LOAD_NODES)){
-    const n=LOAD_NODES[id];
-    // Bigger tap target
-    if(Math.hypot(mx-n.x,my-n.y)<=n.r+14) return id;
-  }
-  return null;
-}
-
-// ── Events ───────────────────────────────
-canvas.addEventListener('click', e=>{
+// ── Events ────────────────────────────────
+canvas.addEventListener('click',e=>{
   const rect=canvas.getBoundingClientRect();
   const mx=(e.clientX-rect.left)*(W/rect.width);
   const my=(e.clientY-rect.top)*(H/rect.height);
-  const hit=hitLoadNode(mx,my);
-  if(hit){ S.loads[hit]=!S.loads[hit]; }
+  for(const id of Object.keys(LOAD_NODES)){
+    const n=LOAD_NODES[id];
+    if(Math.hypot(mx-n.x,my-n.y)<=n.r+14){ S.loads[id]=!S.loads[id]; return; }
+  }
 });
 
 document.querySelectorAll('.mode-btn').forEach(btn=>btn.addEventListener('click',()=>{
@@ -639,8 +597,36 @@ document.querySelectorAll('.mode-btn').forEach(btn=>btn.addEventListener('click'
   btn.classList.add('active');
 }));
 
-document.getElementById('solar-toggle').addEventListener('click',function(){
-  S.solar=!S.solar; this.classList.toggle('on',S.solar);
+// EV rate slider
+const evSlider = document.getElementById('ev-slider');
+const evVal    = document.getElementById('ev-val');
+evSlider.addEventListener('input', function(){
+  S.evRateKW = parseFloat(this.value);
+  evVal.textContent = S.evRateKW.toFixed(1) + ' kW';
+  updateSliderFill(this, '#4cd964');
+});
+updateSliderFill(evSlider, '#4cd964');
+
+// Solar slider
+const solSlider = document.getElementById('sol-slider');
+const solVal    = document.getElementById('sol-val');
+solSlider.addEventListener('input', function(){
+  S.solarKW = parseFloat(this.value);
+  solVal.textContent = S.solarKW.toFixed(1) + ' kW';
+  updateSliderFill(this, '#f5a623');
+  // Sync solar toggle: if slider > 0 and toggle was off, turn it on
+  if(S.solarKW > 0 && !S.solar){
+    S.solar = true;
+    document.getElementById('solar-toggle').classList.add('on');
+  }
+});
+updateSliderFill(solSlider, '#f5a623');
+
+// Solar on/off toggle
+document.getElementById('solar-toggle').addEventListener('click', function(){
+  S.solar = !S.solar;
+  this.classList.toggle('on', S.solar);
+  // When toggling off, don't change slider value (so it restores when re-enabled)
 });
 
 frame();
