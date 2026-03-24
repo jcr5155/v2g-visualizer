@@ -238,8 +238,8 @@ const S = {
 
 const NODES = {
   solar: { x:570,  y:68,  r:52, color:'#f5a623', label:'Solar' },
-  grid:  { x:78,   y:295, r:52, color:'#9b9b9b', label:'Grid'  },
-  meter: { x:320,  y:295, r:36, color:'#94a3b8', label:'Meter' },
+  grid:  { x:78,   y:295, r:52, color:'#9b9b9b', label:'Electric Grid'  },
+  meter: { x:320,  y:295, r:36, color:'#94a3b8', label:'Utility Meter' },
   home:  { x:640,  y:295, r:52, color:'#4fc3f7', label:'Home'  },
   ev:    { x:640,  y:460, r:52, color:'#4cd964', label:'EV'    },
 };
@@ -589,7 +589,7 @@ function drawMeterNode(flows){
 
   // Label
   ctx.fillStyle=rgba(col,active?0.72:0.24); ctx.font='600 10px Inter,sans-serif';
-  ctx.fillText('METER', n.x, n.y+n.r+30);
+  ctx.fillText('Utility METER', n.x, n.y+n.r+30);
 
   // Importing / Exporting / Idle
   const sub=pw>0.05?'Importing':pw<-0.05?'Exporting':'Idle';
