@@ -638,5 +638,208 @@ document.getElementById('solar-toggle').addEventListener('click', function(){
 
 frame();
 </script>
+
+<!-- Notes & Definitions -->
+<div id="notes">
+
+  <div class="notes-section">
+    <div class="notes-heading">How to Use This Tool</div>
+    <ol class="notes-list">
+      <li>
+        <strong>Select an operation mode</strong> using the buttons above to see how Solar, Grid, and EV power flows respond in each scenario. The animated dots show the direction and relative magnitude of power on each path.
+      </li>
+      <li>
+        <strong>Toggle home loads</strong> (HVAC, Stove, Dryer, Water Heater) by tapping their nodes on the diagram. Adding loads increases total home consumption, which affects how much the EV must discharge and whether any grid import or export occurs.
+      </li>
+      <li>
+        <strong>Adjust the EV charge/discharge rate</strong> and <strong>Solar PV production</strong> using the sliders to model your actual system. All power values update in real time to reflect KCL (Kirchhoff's Current Law) — energy in always equals energy out at the main panel.
+      </li>
+    </ol>
+  </div>
+
+  <div class="notes-divider"></div>
+
+  <div class="notes-section">
+    <div class="notes-heading">Mode Definitions &amp; Requirements</div>
+
+    <div class="notes-card">
+      <div class="notes-card-title" style="color:#f5a623">② V2G – Savings Mode</div>
+      <p class="notes-card-body">
+        The EV discharges to offset home loads during peak Time-of-Use (TOU) pricing windows or to reduce demand charges — keeping power inside the home rather than importing from the grid. Power from the EV <em>does not</em> export to the grid in this mode.
+      </p>
+      <div class="notes-req-label">Requirements</div>
+      <ul class="notes-req-list">
+        <li>Parallel operating agreement (interconnection) with your utility</li>
+        <li>A TOU rate or demand charge structure from your utility (e.g. PSE EV TOU rate)</li>
+        <li><strong>No direct V2G/V2X program with GM or your utility required</strong></li>
+      </ul>
+    </div>
+
+    <div class="notes-card">
+      <div class="notes-card-title" style="color:#4cd964">③ V2G VPP – Variable Output</div>
+      <p class="notes-card-body">
+        The EV dynamically adjusts its discharge rate in real time to track a utility dispatch signal, targeting zero net grid draw. Output varies continuously — the EV ramps up when home loads increase and ramps down when Solar covers more of the load.
+      </p>
+      <div class="notes-req-label">Requirements</div>
+      <ul class="notes-req-list">
+        <li>Parallel operating agreement (interconnection) with your utility</li>
+        <li>Active V2G or V2X program enrollment with GM Energy</li>
+        <li>Utility or regional energy market participation agreement (e.g. aggregator/VPP program)</li>
+      </ul>
+    </div>
+
+    <div class="notes-card">
+      <div class="notes-card-title" style="color:#c084fc">④ V2G VPP – Fixed Output</div>
+      <p class="notes-card-body">
+        The EV discharges at a steady, pre-committed rate set by the slider. Home loads are served first; any surplus beyond what the home needs exports directly to the grid. This models a firm capacity or energy dispatch commitment to a Virtual Power Plant.
+      </p>
+      <div class="notes-req-label">Requirements</div>
+      <ul class="notes-req-list">
+        <li>Parallel operating agreement (interconnection) with your utility</li>
+        <li>Active V2G or V2X program enrollment with GM Energy</li>
+        <li>Utility or regional energy market participation agreement (e.g. aggregator/VPP program)</li>
+        <li>Export metering and net-metering or export tariff agreement with utility</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="notes-footer">
+    Power values are illustrative. Actual system behavior depends on inverter capability, utility interconnection limits, and GM Energy software configuration.
+  </div>
+
+</div>
+
+<style>
+#notes {
+  width:100%;
+  max-width:960px;
+  margin-top:22px;
+  padding:0 12px 8px;
+  display:flex;
+  flex-direction:column;
+  gap:18px;
+}
+
+.notes-section { display:flex; flex-direction:column; gap:12px; }
+
+.notes-heading {
+  font-size:9px;
+  font-weight:700;
+  letter-spacing:2px;
+  text-transform:uppercase;
+  color:rgba(255,255,255,0.22);
+  padding-bottom:6px;
+  border-bottom:1px solid rgba(255,255,255,0.06);
+}
+
+.notes-list {
+  list-style:none;
+  counter-reset:steps;
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+  padding:0;
+}
+
+.notes-list li {
+  counter-increment:steps;
+  display:flex;
+  gap:10px;
+  font-size:12px;
+  line-height:1.6;
+  color:rgba(255,255,255,0.48);
+}
+
+.notes-list li::before {
+  content:counter(steps);
+  flex-shrink:0;
+  width:20px;
+  height:20px;
+  border-radius:50%;
+  background:rgba(79,195,247,0.10);
+  border:1px solid rgba(79,195,247,0.22);
+  color:#4fc3f7;
+  font-size:10px;
+  font-weight:700;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  margin-top:1px;
+}
+
+.notes-list li strong { color:rgba(255,255,255,0.72); font-weight:600; }
+
+.notes-divider {
+  height:1px;
+  background:rgba(255,255,255,0.06);
+}
+
+.notes-card {
+  background:rgba(255,255,255,0.025);
+  border:1px solid rgba(255,255,255,0.07);
+  border-radius:10px;
+  padding:14px 16px;
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+}
+
+.notes-card-title {
+  font-size:12px;
+  font-weight:700;
+  letter-spacing:0.3px;
+}
+
+.notes-card-body {
+  font-size:11.5px;
+  line-height:1.65;
+  color:rgba(255,255,255,0.45);
+}
+
+.notes-card-body em { color:rgba(255,255,255,0.62); font-style:normal; font-weight:500; }
+
+.notes-req-label {
+  font-size:9px;
+  font-weight:700;
+  letter-spacing:1.5px;
+  text-transform:uppercase;
+  color:rgba(255,255,255,0.20);
+  margin-top:2px;
+}
+
+.notes-req-list {
+  list-style:none;
+  padding:0;
+  display:flex;
+  flex-direction:column;
+  gap:4px;
+}
+
+.notes-req-list li {
+  font-size:11px;
+  color:rgba(255,255,255,0.38);
+  line-height:1.5;
+  padding-left:14px;
+  position:relative;
+}
+
+.notes-req-list li::before {
+  content:'—';
+  position:absolute;
+  left:0;
+  color:rgba(255,255,255,0.18);
+}
+
+.notes-req-list li strong { color:rgba(255,255,255,0.58); font-weight:600; }
+
+.notes-footer {
+  font-size:10px;
+  color:rgba(255,255,255,0.16);
+  line-height:1.6;
+  text-align:center;
+  padding-top:4px;
+}
+</style>
+
 </body>
 </html>
