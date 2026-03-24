@@ -319,20 +319,27 @@ function drawNode(id, pw, flows) {
     drawNodeIcon(id,n.x,n.y,n.r*0.38,iconCol);
   }
 
-  // kW label
+  // kW label, name, and status — above node for EV (bottom node gets clipped), below for all others
   const dispKW=id==='home'?flows.load:abs;
+  const above = id==='ev';
+  const baseY = above ? n.y - n.r - 8 : n.y + n.r + 22;
+  const step  = above ? -14 : 14;
+
+  ctx.textAlign='center';
+
+  // kW
   ctx.fillStyle=active?'#fff':'rgba(255,255,255,0.25)';
   ctx.font=`700 ${dispKW>=10?13:15}px Inter,sans-serif`;
-  ctx.textAlign='center'; ctx.textBaseline='alphabetic';
-  ctx.fillText(dispKW.toFixed(1)+' kW', n.x, n.y+n.r+22);
+  ctx.textBaseline = above ? 'alphabetic' : 'alphabetic';
+  ctx.fillText(dispKW.toFixed(1)+' kW', n.x, baseY);
 
   // Label
   ctx.fillStyle=rgba(col,active?0.78:0.28); ctx.font='600 11px Inter,sans-serif';
-  ctx.fillText(n.label.toUpperCase(), n.x, n.y+n.r+36);
+  ctx.fillText(n.label.toUpperCase(), n.x, baseY + step);
 
   // Sub status
   ctx.fillStyle=rgba(col,0.38); ctx.font='400 9.5px Inter,sans-serif';
-  ctx.fillText(nodeSub(id,pw,flows), n.x, n.y+n.r+49);
+  ctx.fillText(nodeSub(id,pw,flows), n.x, baseY + step*2);
 }
 
 function nodeSub(id,pw,flows){
